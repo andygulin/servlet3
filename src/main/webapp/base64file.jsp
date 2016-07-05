@@ -31,6 +31,7 @@ function submit(){
 	var name = $("#name").val();
 	$.post("${pageContext.request.contextPath}/upload2",{image:base64,name:name},function(data){
 		alert(data);
+		console.log(data);
 	});
 }
 </script>

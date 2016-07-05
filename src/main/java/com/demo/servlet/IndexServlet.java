@@ -1,4 +1,4 @@
-package com.demo.servlet3;
+package com.demo.servlet;
 
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -15,8 +15,7 @@ public class IndexServlet extends HttpServlet {
 	private static final long serialVersionUID = 6130573054670751160L;
 
 	@Override
-	protected void service(HttpServletRequest req, HttpServletResponse resp)
-			throws ServletException, IOException {
+	protected void service(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		PrintWriter out = resp.getWriter();
 		out.print("hello");
 		out.flush();
