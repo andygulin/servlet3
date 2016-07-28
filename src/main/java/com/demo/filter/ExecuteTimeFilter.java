@@ -11,7 +11,9 @@ import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.annotation.WebFilter;
 
-@WebFilter(filterName = "ExecuteTimeFilter", urlPatterns = "/*")
+import org.apache.commons.lang3.time.StopWatch;
+
+@WebFilter(filterName = "ExecuteTimeFilter", urlPatterns = "/*", asyncSupported = true)
 public class ExecuteTimeFilter implements Filter {
 
 	private static final Logger logger = Logger.getLogger(ExecuteTimeFilter.class.getName());
@@ -24,15 +26,15 @@ public class ExecuteTimeFilter implements Filter {
 	@Override
 	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
 			throws IOException, ServletException {
-		long start = System.currentTimeMillis();
+		StopWatch stopWatch = new StopWatch();
+		stopWatch.start();
 		chain.doFilter(request, response);
-		long end = System.currentTimeMillis();
-		logger.info("execute time : " + (end - start));
+		stopWatch.stop();
+		logger.info("execute time : " + stopWatch.getTime());
 	}
 
 	@Override
 	public void destroy() {
 
 	}
-
 }

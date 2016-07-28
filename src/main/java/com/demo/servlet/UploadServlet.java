@@ -2,7 +2,6 @@ package com.demo.servlet;
 
 import java.io.IOException;
 import java.util.UUID;
-import java.util.logging.Logger;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.MultipartConfig;
@@ -12,6 +11,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.Part;
 
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.StringUtils;
 
@@ -23,8 +23,6 @@ public class UploadServlet extends HttpServlet {
 
 	private static final MultipartConfig config;
 
-	private static final Logger logger = Logger.getLogger(UploadServlet.class.getName());
-
 	static {
 		config = UploadServlet.class.getAnnotation(MultipartConfig.class);
 	}
@@ -33,23 +31,19 @@ public class UploadServlet extends HttpServlet {
 	protected void service(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		req.setCharacterEncoding("UTF-8");
 
-		logger.info(config.location());
-		logger.info(String.valueOf(config.fileSizeThreshold()));
-		logger.info(String.valueOf(config.maxFileSize()));
-		logger.info(String.valueOf(config.maxRequestSize()));
+		resp.getWriter().println(config.location());
+		resp.getWriter().println(String.valueOf(config.fileSizeThreshold()));
+		resp.getWriter().println(String.valueOf(config.maxFileSize()));
+		resp.getWriter().println(String.valueOf(config.maxRequestSize()));
 
 		Part part = req.getPart("file");
 		String header = part.getHeader("content-disposition");
 		String fileName = StringUtils.substringBetween(header, "filename=\"", "\"");
 		String ext = FilenameUtils.getExtension(fileName);
-		String destFile = UUID.randomUUID().toString() + "." + ext;
-
-		logger.info(fileName);
-		logger.info(ext);
-		logger.info(destFile);
+		String destFile = FileUtils.getTempDirectoryPath() + UUID.randomUUID().toString()
+				+ FilenameUtils.EXTENSION_SEPARATOR_STR + ext;
 
 		part.write(destFile);
-
+		resp.getWriter().println("write file to : " + destFile);
 	}
-
 }
